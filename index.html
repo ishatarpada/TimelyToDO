@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>TimelyToDo</title>
+    <style>
+        body {
+            background-color: "bg-dark";
+        }
+
+        .mytext {
+            font-weight: 500;
+            font-size: 30px;
+            color: #ffffff;
+        }
+
+        .myc {
+            color: #ffffff;
+        }
+
+        .mydiv {
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body class="bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #db5d69;">
+        <a class="navbar-brand" href="index.html">TimelyToDo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index2.html">MyClock <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container my-4 bg-dark">
+        <h2 class="text-center myc">
+            <b>TimelyToDo</b>
+        </h2>
+        <div class="form-group">
+            <label for="Taskname" class="mytext">Task Name</label>
+            <input type="text" class="form-control mydiv" id="Taskname" aria-describedby="emailHelp"
+                style="background-color: #abb4b1;">
+        </div>
+        <div class="form-group">
+            <label for="Description" class="mytext">Description</label>
+            <textarea class="form-control mydiv" id="Description" rows="3"
+                style="background-color: #abb4b1;"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="Deadline" class="mytext">Deadline Date</label>
+            <input type="date" class="form-control mydiv" style="background-color: #abb4b1;" id="Deadline"
+                aria-describedby="emailHelp" placeholder="Today">
+        </div>
+        <div class="form-group">
+            <label for="Deadlne" class="mytext">Deadline Time</label>
+            <input type="time" class="form-control mydiv" style="background-color: #abb4b1;" id="Deadine"
+                aria-describedby="emailHelp">
+        </div>
+        <small id="emailHelp" class="form-text text-muted">Add an item to the list:</small>
+        <button type="submit" id="add" class="btn btn-danger">ADD</button>
+        <div id="items" class="my-4 text-center myc">
+            <h2><b>Your Items</b></h2>
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Serial No.</th>
+                        <th scope="col">Task Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- <tr>
+                    <th scope="row">1</th>
+                    <td>Code</td>
+                    <td>Make website</td>
+                    <td>13-11-2021</td>
+                    <td><button class="btn btn-sm btn-danger">Delete</button></td>
+                  </tr> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+        mytempstr = localStorage.getItem("itemsJson");
+        mytemp = JSON.parse(mytempstr);
+        var mhour;
+        var mtm;
+
+        function playm() {
+            var snd = new Audio("alarm.mp3");
+            snd.play();
+        }
+
+        function setrem() {
+            var ans = 0;
+            mytemp.forEach((element, index) => {
+                mystr = element[3];
+                ab = new Date();
+                if (mystr[0] == '0') {
+                    mhour = parseInt(mystr[1]);
+                }
+                else {
+                    mhour = parseInt(mystr[0] + mystr[1]);
+                }
+
+                mtm = ab.getHours();
+                if (mhour - mtm >= 0 & mhour - mtm <= 1) {
+                    ans = 1;
+                    alert(`Reminder: You've gotta do task no. ${index + 1} soon!`);
+                }
+            })
+            if (ans == 1 & mytemp.length > 0) {
+                playm();
+            }
+        }
+        setInterval(setrem, 600000);
+
+        add = document.getElementById("add");
+        function update() {
+            console.log("Updating list....");
+            tname = document.getElementById("Taskname").value;
+            Desc = document.getElementById("Description").value;
+            Dead = document.getElementById("Deadline").value;
+            dead = document.getElementById("Deadine").value;
+            if (tname != "") {
+                if (localStorage.getItem("itemsJson") == null) {
+                    myArr = [];
+                    myArr.push([tname, Desc, Dead, dead]);
+                    localStorage.setItem("itemsJson", JSON.stringify(myArr));
+                }
+                else {
+                    myArrstr = localStorage.getItem("itemsJson");
+                    myArr = JSON.parse(myArrstr);
+                    myArr.push([tname, Desc, Dead, dead]);
+                    localStorage.setItem("itemsJson", JSON.stringify(myArr));
+                }
+            }
+            else {
+                if (localStorage.getItem("itemsJson") == null) {
+                    myArr = [];
+                }
+                else {
+                    myArrstr = localStorage.getItem("itemsJson");
+                    myArr = JSON.parse(myArrstr);
+                }
+            }
+            str = "";
+            myArr.forEach((element, index) => {
+                str +=
+                    `
+                <tr>
+                    <th scope="row">${index + 1}</th>
+                    <td>${element[0]}</td>
+                    <td>${element[1]}</td>
+                    <td>${element[2]}</td>
+                    <td>${element[3]}</td>
+                    <td><button class="btn btn-sm btn-danger" onclick="deleteItem(${index})">Delete</button></td>
+                </tr>
+                `
+            })
+            // onclick="deleteItem(${index})"
+            tbody.innerHTML = str;
+            setrem();
+        }
+        add.addEventListener("click", update);
+        update();
+        function deleteItem(index) {
+            console.log(`Deleted task ${index + 1}`);
+            myArrstr = localStorage.getItem("itemsJson");
+            myArr = JSON.parse(myArrstr);
+            myArr.splice(index, 1);
+            document.getElementById("Taskname").value = "";
+            document.getElementById("Description").value = "";
+            document.getElementById("Deadline").value = "";
+            document.getElementById("Deadine").value = "";
+            localStorage.setItem("itemsJson", JSON.stringify(myArr));
+            update();
+        }
+    </script>
+</body>
+
+</html>
